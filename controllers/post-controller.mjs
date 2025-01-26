@@ -16,11 +16,11 @@ export default class PostController {
         text,
         color: color || "#000000",
       });
-      const post = await doc.save();
+      const content = await doc.save();
 
-      return res.status(200).json({ message: "Пост успешно создан", post });
+      return res.status(200).json({ message: "Пост успешно создан", content });
     } catch (err) {
-      res.status(400).json({ message: "Ошибка при создании поста", err });
+      res.status(500).json({ message: "Ошибка при создании поста", err });
     }
   }
   static async getPosts(req, res) {
@@ -40,16 +40,16 @@ export default class PostController {
         .status(200)
         .json({ message: "Посты успешно получены", content });
     } catch (err) {
-      res.status(400).json({ message: "Ошибка при получении постов", err });
+      res.status(500).json({ message: "Ошибка при получении постов", err });
     }
   }
   static async deletePost(req, res) {
     try {
       const { id } = req.params;
-      const post = await PostModel.findByIdAndDelete(id);
-      return res.status(200).json({ message: "Пост успешно удален", post });
+      const content = await PostModel.findByIdAndDelete(id);
+      return res.status(200).json({ message: "Пост успешно удален", content });
     } catch (err) {
-      res.status(400).json({ message: "Ошибка при получении постов", err });
+      res.status(500).json({ message: "Ошибка при получении постов", err });
     }
   }
 }

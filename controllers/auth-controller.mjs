@@ -63,7 +63,7 @@ export default class AuthController {
         .status(200)
         .json({ message: "Успешная регистрация", ...userData, token });
     } catch (err) {
-      return res.status(400).json({ message: "Ошибка регистрации", err });
+      return res.status(500).json({ message: "Ошибка регистрации", err });
     }
   }
   static async login(req, res) {
@@ -100,7 +100,7 @@ export default class AuthController {
         .status(200)
         .json({ message: "Успешный вход", ...userData, token });
     } catch (err) {
-      return res.status(200).json({ message: "Ошибка входа", err });
+      return res.status(500).json({ message: "Ошибка входа", err });
     }
   }
 }
