@@ -38,6 +38,11 @@ const UserSchema = Schema({
     required: true,
     default: [],
   },
+  roles: {
+    type: [String],
+    required: true,
+    default: ["USER"]
+  }
 }, {
   timestamps: true
 });

@@ -36,6 +36,7 @@ export default class AuthController {
         lastName: "",
         avatarURL: "",
         status: "",
+        roles: ["USER"],
       });
       const user = await doc.save();
 
@@ -78,6 +79,7 @@ export default class AuthController {
       const token = jwt.sign(
         {
           _id: user._id,
+          roles: user.roles
         },
         secret,
         {
