@@ -14,7 +14,7 @@ export default class PostController {
       const doc = await new PostModel({
         userID,
         text,
-        color: color || "#ffffff",
+        color: color || "#000000",
       });
       const post = await doc.save();
 

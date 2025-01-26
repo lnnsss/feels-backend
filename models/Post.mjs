@@ -14,7 +14,7 @@ const PostSchema = Schema(
     color: {
       type: String,
       required: false,
-      default: "#ffffff",
+      default: "#000000",
     },
   },
   {

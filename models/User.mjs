@@ -25,7 +25,8 @@ const UserSchema = Schema({
   },
   avatarURL: {
     type: String,
-    required: false,
+    required: true,
+    default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQncwmjK9JtQBeWuoCPkioKY3gsv4l7L7_Egw&s",
   },
   status: {
     type: String,
