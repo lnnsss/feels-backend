@@ -4,7 +4,10 @@ import PostRoutes from "./post-route.mjs";
 
 const router = Router();
 
+// Регистрация / Вход
 router.use("/auth", AuthRoutes);
+
+// Посты
 router.use("/posts", PostRoutes);
 
 export default router;

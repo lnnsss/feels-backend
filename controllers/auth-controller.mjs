@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/User.mjs";
+import { validationResult } from "express-validator";
 
 dotenv.config();
 const secret = process.env.JWT_SECRET;
@@ -9,6 +10,11 @@ const secret = process.env.JWT_SECRET;
 export default class AuthController {
   static async registration(req, res) {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ message: errors.array()[0].msg });
+      }
+
       const { email, password, userName } = req.body;
 
       const existingUserByEmail = await UserModel.findOne({ email });
@@ -34,7 +40,8 @@ export default class AuthController {
         userName,
         name: "",
         lastName: "",
-        avatarURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQncwmjK9JtQBeWuoCPkioKY3gsv4l7L7_Egw&s",
+        avatarURL:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQncwmjK9JtQBeWuoCPkioKY3gsv4l7L7_Egw&s",
         status: "",
         roles: ["USER"],
       });
@@ -79,7 +86,7 @@ export default class AuthController {
       const token = jwt.sign(
         {
           _id: user._id,
-          roles: user.roles
+          roles: user.roles,
         },
         secret,
         {
