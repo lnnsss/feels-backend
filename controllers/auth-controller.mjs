@@ -40,8 +40,7 @@ export default class AuthController {
         email,
         passwordHash: hash,
         userName,
-        avatarURL:
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQncwmjK9JtQBeWuoCPkioKY3gsv4l7L7_Egw&s",
+        avatarURL: "",
         status: "",
         roles: ["USER"],
       });
