@@ -17,11 +17,11 @@ const UserSchema = Schema({
   },
   name: {
     type: String,
-    required: false,
+    required: true,
   },
   lastName: {
     type: String,
-    required: false,
+    required: true,
   },
   avatarURL: {
     type: String,

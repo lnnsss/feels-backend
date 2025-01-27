@@ -15,7 +15,7 @@ export default class AuthController {
         return res.status(400).json({ message: errors.array()[0].msg });
       }
 
-      const { email, password, userName } = req.body;
+      const { name, lastName, email, password, userName } = req.body;
 
       const existingUserByEmail = await UserModel.findOne({ email });
       if (existingUserByEmail) {
@@ -35,11 +35,11 @@ export default class AuthController {
       const hash = await bcrypt.hash(password, salt);
 
       const doc = new UserModel({
+        name,
+        lastName,
         email,
         passwordHash: hash,
         userName,
-        name: "",
-        lastName: "",
         avatarURL:
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQncwmjK9JtQBeWuoCPkioKY3gsv4l7L7_Egw&s",
         status: "",
@@ -50,6 +50,7 @@ export default class AuthController {
       const token = jwt.sign(
         {
           _id: user._id,
+          roles: user.roles,
         },
         secret,
         {
