@@ -25,24 +25,24 @@ export default class PostController {
   }
   static async getPosts(req, res) {
     try {
-      const { userID } = req.query;
-      let content;
+        const { userID } = req.query;
+        let content;
 
-      if (userID) {
-        content = await PostModel.find({ userID });
-      } else {
-        content = await PostModel.find();
-      }
-      if (content.length == 0) {
-        return res.status(400).json({ message: "Посты отссутствуют", content });
-      }
-      return res
-        .status(200)
-        .json({ message: "Посты успешно получены", content });
+        if (userID) {
+            content = await PostModel.find({ userID });
+        } else {
+            content = await PostModel.find();
+        }
+
+        if (content.length === 0) {
+            return res.status(204).json({ message: "Посты отсутствуют", content: [] });
+        }
+
+        return res.status(200).json({ message: "Посты успешно получены", content });
     } catch (err) {
-      res.status(500).json({ message: "Ошибка при получении постов", err });
+        res.status(500).json({ message: "Ошибка при получении постов", err });
     }
-  }
+}
   static async deletePost(req, res) {
     try {
       const { id } = req.params;
