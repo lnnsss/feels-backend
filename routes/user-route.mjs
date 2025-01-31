@@ -8,7 +8,7 @@ const router = Router();
 router.get("/", UserController.getUsers);
 
 // Получение пользователя по id
-router.get("/:id", UserController.getUser);
+router.get("/:id", UserController.getUserByID);
 
 // Редактирование пользователя по id
 router.patch("/:id", editValidation, UserController.editUser);

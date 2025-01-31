@@ -4,22 +4,36 @@ import UserModel from "../models/User.mjs";
 export default class UserController {
   static async getUsers(req, res) {
     try {
-      const content = await UserModel.find();
-      if (content.length == 0) {
+      const { userName } = req.query;
+      let content;
+
+      if (userName) {
+        content = await UserModel.findOne({ userName });
+        if (!content) {
+          return res.status(404).json({ message: "Пользователь не найден" });
+        }
         return res
-          .status(400)
-          .json({ message: "Пользователи отссутствуют", content });
+          .status(200)
+          .json({ message: "Пользователь успешно получен", content });
+      } else {
+        content = await UserModel.find();
+        if (content.length === 0) {
+          return res
+            .status(400)
+            .json({ message: "Пользователи отсутствуют", content });
+        }
+        return res
+          .status(200)
+          .json({ message: "Пользователи успешно получены", content });
       }
-      return res
-        .status(200)
-        .json({ message: "Пользователи успешно получены", content });
     } catch (err) {
-      res
+      console.error("Ошибка при получении пользователей:", err);
+      return res
         .status(500)
         .json({ message: "Ошибка при получении пользователей", err });
     }
   }
-  static async getUser(req, res) {
+  static async getUserByID(req, res) {
     try {
       const { id } = req.params;
       const content = await UserModel.findById(id);

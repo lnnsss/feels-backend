@@ -25,10 +25,17 @@ export default class PostController {
   }
   static async getPosts(req, res) {
     try {
-      const { userID } = req.query;
+      const { userID, userName } = req.query;
       let content;
 
-      if (userID) {
+      if (userName) {
+        const user = await UserModel.findOne({ userName });
+        if (!user) {
+          return res.status(404).json({ message: "Пользователь не найден" });
+        }
+
+        content = await PostModel.find({ userID: user._id });
+      } else if (userID) {
         content = await PostModel.find({ userID });
       } else {
         content = await PostModel.find();
@@ -44,9 +51,12 @@ export default class PostController {
         .status(200)
         .json({ message: "Посты успешно получены", content });
     } catch (err) {
-      res.status(500).json({ message: "Ошибка при получении постов", err });
+      return res
+        .status(500)
+        .json({ message: "Ошибка при получении постов", err });
     }
   }
+
   static async deletePost(req, res) {
     try {
       const { id } = req.params;
