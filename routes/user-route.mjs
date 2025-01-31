@@ -1,5 +1,6 @@
 import { Router } from "express";
 import UserController from "../controllers/user-controller.mjs";
+import { editValidation } from "../middlewares/edit-middleware.mjs";
 
 const router = Router();
 
@@ -10,7 +11,7 @@ router.get("/", UserController.getUsers);
 router.get("/:id", UserController.getUser);
 
 // Редактирование пользователя по id
-router.patch("/:id", UserController.editUser);
+router.patch("/:id", editValidation, UserController.editUser);
 
 // Удаление пользователя по id
 router.delete("/:id", UserController.deleteUser);

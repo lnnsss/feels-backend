@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator";
 import UserModel from "../models/User.mjs";
 
 export default class UserController {
@@ -38,6 +39,12 @@ export default class UserController {
     try {
       const { id } = req.params;
       const { name, lastName, userName, status, avatarURL } = req.body;
+
+      // Валидация
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ message: errors.array()[0].msg });
+      }
 
       // Фильтруем пустые поля
       const body = Object.fromEntries(
