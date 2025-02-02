@@ -16,7 +16,7 @@ export default class UserController {
           .status(200)
           .json({ message: "Пользователь успешно получен", content });
       } else {
-        content = await UserModel.find();
+        content = await UserModel.find({ roles: { $ne: "ADMIN" } });
         if (content.length === 0) {
           return res
             .status(400)
@@ -27,7 +27,6 @@ export default class UserController {
           .json({ message: "Пользователи успешно получены", content });
       }
     } catch (err) {
-      console.error("Ошибка при получении пользователей:", err);
       return res
         .status(500)
         .json({ message: "Ошибка при получении пользователей", err });
@@ -97,6 +96,63 @@ export default class UserController {
         .json({ message: "Ошибка при редактировании пользователя", err });
     }
   }
+  static async subscribe(req, res) {
+    try {
+      const { id } = req.params;
+      const { subscriptionID } = req.body;
+
+      // Находим пользователя по ID
+      const user = await UserModel.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: "Пользователь не найден" });
+      }
+
+      // Проверяем, подписан ли уже пользователь
+      if (!user.subscriptions.includes(subscriptionID)) {
+        user.subscriptions.push(subscriptionID);
+        await user.save();
+        return res.status(200).json({
+          message: "Успешная подписка",
+          content: user.subscriptions,
+        });
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Уже подписаны на пользователя" });
+      }
+    } catch (err) {
+      console.error("Ошибка при попытке подписки:", err);
+      res.status(500).json({ message: "Ошибка при попытке подписки", err });
+    }
+  }
+  static async unsubscribe(req, res) {
+    try {
+      const { id } = req.params; 
+      const { subscriptionID } = req.body;
+
+      // Находим пользователя по ID
+      const user = await UserModel.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: "Пользователь не найден" });
+      }
+
+      const index = user.subscriptions.indexOf(subscriptionID); // индекс подписки
+      if (index > -1) {
+        user.subscriptions.splice(index, 1);
+        await user.save();
+        return res.status(200).json({
+          message: "Успешная отписка",
+          content: user.subscriptions,
+        });
+      } else {
+        return res.status(400).json({ message: "Подписка не найдена" });
+      }
+    } catch (err) {
+      console.error("Ошибка при попытке отписки:", err);
+      res.status(500).json({ message: "Ошибка при попытке отписки", err });
+    }
+  }
+
   static async deleteUser(req, res) {
     try {
       const { id } = req.params;

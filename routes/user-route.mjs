@@ -13,6 +13,12 @@ router.get("/:id", UserController.getUserByID);
 // Редактирование пользователя по id
 router.patch("/:id", editValidation, UserController.editUser);
 
+// Подписка
+router.patch("/:id/subscribe", editValidation, UserController.subscribe);
+
+// Отписка
+router.patch("/:id/unsubscribe", editValidation, UserController.unsubscribe);
+
 // Удаление пользователя по id
 router.delete("/:id", UserController.deleteUser);
 
