@@ -10,6 +10,9 @@ router.get("/", UserController.getUsers);
 // Получение пользователя по id
 router.get("/:id", UserController.getUserByID);
 
+// Получение подписок пользователя по id
+router.get("/:id/subscriptions", UserController.getUserSubscriptions);
+
 // Редактирование пользователя по id
 router.patch("/:id", editValidation, UserController.editUser);
 

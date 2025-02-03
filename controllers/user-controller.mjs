@@ -48,6 +48,29 @@ export default class UserController {
         .json({ message: "Ошибка при получении пользователя", err });
     }
   }
+  static async getUserSubscriptions(req, res) {
+    try {
+      const { id } = req.params; 
+
+      const user = await UserModel.findById(id).populate(
+        "subscriptions",
+        "userName name lastName avatarURL"
+      );
+      if (!user) {
+        return res.status(404).json({ message: "Пользователь не найден" });
+      }
+
+      return res.status(200).json({
+        message: "Подписки успешно получены",
+        content: user.subscriptions, 
+      });
+    } catch (err) {
+      console.error("Ошибка при получении подписок пользователя:", err);
+      return res
+        .status(500)
+        .json({ message: "Ошибка при получении подписок пользователя", err });
+    }
+  }
   static async editUser(req, res) {
     try {
       const { id } = req.params;
@@ -127,7 +150,7 @@ export default class UserController {
   }
   static async unsubscribe(req, res) {
     try {
-      const { id } = req.params; 
+      const { id } = req.params;
       const { subscriptionID } = req.body;
 
       // Находим пользователя по ID
@@ -152,7 +175,6 @@ export default class UserController {
       res.status(500).json({ message: "Ошибка при попытке отписки", err });
     }
   }
-
   static async deleteUser(req, res) {
     try {
       const { id } = req.params;
