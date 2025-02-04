@@ -56,6 +56,7 @@ export default class PostController {
         .json({ message: "Ошибка при получении постов", err });
     }
   }
+  static async getAllPosts(req, res) {
 
   static async deletePost(req, res) {
     try {

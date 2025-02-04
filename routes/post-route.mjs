@@ -9,6 +9,9 @@ router.post("/", PostController.createPost);
 // Получение постов
 router.get("/", PostController.getPosts);
 
+// Получение всех постов с информацией о пользователе
+router.get("/all", PostController.getAllPosts);
+
 // Удаление поста
 router.delete("/:id", PostController.deletePost);
 
