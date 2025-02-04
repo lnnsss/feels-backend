@@ -57,7 +57,28 @@ export default class PostController {
     }
   }
   static async getAllPosts(req, res) {
+    try {
+      // Находим все посты и заполняем информацию о пользователе
+      const posts = await PostModel.find().populate(
+        "userID",
+        "userName name lastName"
+      );
 
+      if (posts.length === 0) {
+        return res
+          .status(204)
+          .json({ message: "Посты отсутствуют", content: [] });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Посты успешно получены", content: posts });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ message: "Ошибка при получении постов", err });
+    }
+  }
   static async deletePost(req, res) {
     try {
       const { id } = req.params;
