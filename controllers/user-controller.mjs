@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import UserModel from "../models/User.mjs";
+import PostModel from "../models/Post.mjs";
 
 export default class UserController {
   static async getUsersCount(req, res) {
@@ -10,9 +11,13 @@ export default class UserController {
         content: count,
       });
     } catch (err) {
-      console.error("Ошибка при получении количества пользователей (исключая админов):", err);
+      console.error(
+        "Ошибка при получении количества пользователей (исключая админов):",
+        err
+      );
       return res.status(500).json({
-        message: "Ошибка при получении количества пользователей (исключая админов)",
+        message:
+          "Ошибка при получении количества пользователей (исключая админов)",
         err,
       });
     }
@@ -193,14 +198,27 @@ export default class UserController {
   static async deleteUser(req, res) {
     try {
       const { id } = req.params;
+
+      // Удаление всех постов пользователя
+      await PostModel.deleteMany({ userID: id });
+
+      // Удаление пользователя
       const content = await UserModel.findByIdAndDelete(id);
-      return res
-        .status(200)
-        .json({ message: "Пользователь успешно удален", content });
+
+      if (!content) {
+        return res.status(404).json({ message: "Пользователь не найден" });
+      }
+
+      return res.status(200).json({
+        message: "Пользователь и все его посты успешно удалены",
+        content,
+      });
     } catch (err) {
-      res
-        .status(500)
-        .json({ message: "Ошибка при удалении пользователя", err });
+      console.error("Ошибка при удалении пользователя и его постов:", err);
+      res.status(500).json({
+        message: "Ошибка при удалении пользователя и его постов",
+        err,
+      });
     }
   }
 }
