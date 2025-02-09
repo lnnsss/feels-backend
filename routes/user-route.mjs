@@ -4,6 +4,9 @@ import { editValidation } from "../middlewares/edit-middleware.mjs";
 
 const router = Router();
 
+// Получение количества пользователей
+router.get("/count", UserController.getUsersCount);
+
 // Получение всех пользователей
 router.get("/", UserController.getUsers);
 

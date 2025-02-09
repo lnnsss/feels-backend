@@ -23,6 +23,21 @@ export default class PostController {
       res.status(500).json({ message: "Ошибка при создании поста", err });
     }
   }
+  static async getPostsCount(req, res) {
+    try {
+      const count = await PostModel.countDocuments();
+      return res.status(200).json({
+        message: "Количество постов успешно получено",
+        content: count,
+      });
+    } catch (err) {
+      console.error("Ошибка при получении количества постов:", err);
+      return res.status(500).json({
+        message: "Ошибка при получении количества постов",
+        err,
+      });
+    }
+  }
   static async getPosts(req, res) {
     try {
       const { userID, userName } = req.query;

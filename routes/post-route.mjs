@@ -6,6 +6,9 @@ const router = Router();
 // Создание поста
 router.post("/", PostController.createPost);
 
+// Получение количества постов
+router.get("/count", PostController.getPostsCount);
+
 // Получение постов
 router.get("/", PostController.getPosts);
 

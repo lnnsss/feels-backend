@@ -2,6 +2,21 @@ import { validationResult } from "express-validator";
 import UserModel from "../models/User.mjs";
 
 export default class UserController {
+  static async getUsersCount(req, res) {
+    try {
+      const count = await UserModel.countDocuments();
+      return res.status(200).json({
+        message: "Количество пользователей успешно получено",
+        content: count,
+      });
+    } catch (err) {
+      console.error("Ошибка при получении количества пользователей:", err);
+      return res.status(500).json({
+        message: "Ошибка при получении количества пользователей",
+        err,
+      });
+    }
+  }
   static async getUsers(req, res) {
     try {
       const { userName } = req.query;
@@ -50,7 +65,7 @@ export default class UserController {
   }
   static async getUserSubscriptions(req, res) {
     try {
-      const { id } = req.params; 
+      const { id } = req.params;
 
       const user = await UserModel.findById(id).populate(
         "subscriptions",
@@ -62,7 +77,7 @@ export default class UserController {
 
       return res.status(200).json({
         message: "Подписки успешно получены",
-        content: user.subscriptions, 
+        content: user.subscriptions,
       });
     } catch (err) {
       console.error("Ошибка при получении подписок пользователя:", err);
