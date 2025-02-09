@@ -4,15 +4,15 @@ import UserModel from "../models/User.mjs";
 export default class UserController {
   static async getUsersCount(req, res) {
     try {
-      const count = await UserModel.countDocuments();
+      const count = await UserModel.countDocuments({ roles: { $ne: "ADMIN" } });
       return res.status(200).json({
-        message: "Количество пользователей успешно получено",
+        message: "Количество пользователей (исключая админов) успешно получено",
         content: count,
       });
     } catch (err) {
-      console.error("Ошибка при получении количества пользователей:", err);
+      console.error("Ошибка при получении количества пользователей (исключая админов):", err);
       return res.status(500).json({
-        message: "Ошибка при получении количества пользователей",
+        message: "Ошибка при получении количества пользователей (исключая админов)",
         err,
       });
     }
