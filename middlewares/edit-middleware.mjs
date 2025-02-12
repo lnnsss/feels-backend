@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 
-// Кастомная функция для проверки, что URL ведет на изображение
+// Проверки, что URL ведет на изображение
 const isImageUrl = (value) => {
   if (!value) return true;
 
@@ -23,7 +23,7 @@ export const editValidation = [
     .withMessage("Имя не может содержать специальные символы (! # $ % & ?)")
     .not()
     .contains(" ")
-    .withMessage("Имя не должно содержать пробелов"), // Проверка на пробелы
+    .withMessage("Имя не должно содержать пробелов"), 
 
   body("lastName")
     .optional()

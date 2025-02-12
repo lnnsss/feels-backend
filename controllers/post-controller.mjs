@@ -2,6 +2,7 @@ import PostModel from "../models/Post.mjs";
 import UserModel from "../models/User.mjs";
 
 export default class PostController {
+  // Создание поста
   static async createPost(req, res) {
     try {
       const { userID, text, color } = req.body;
@@ -23,6 +24,7 @@ export default class PostController {
       res.status(500).json({ message: "Ошибка при создании поста", err });
     }
   }
+  // Получение количества постов
   static async getPostsCount(req, res) {
     try {
       const count = await PostModel.countDocuments();
@@ -38,6 +40,7 @@ export default class PostController {
       });
     }
   }
+  // Получение постов
   static async getPosts(req, res) {
     try {
       const { userID, userName } = req.query;
@@ -71,6 +74,7 @@ export default class PostController {
         .json({ message: "Ошибка при получении постов", err });
     }
   }
+  // Получение всех постов с информацией о пользователе
   static async getAllPosts(req, res) {
     try {
       // Находим все посты и заполняем информацию о пользователе
@@ -94,6 +98,7 @@ export default class PostController {
         .json({ message: "Ошибка при получении постов", err });
     }
   }
+  // Удаление поста
   static async deletePost(req, res) {
     try {
       const { id } = req.params;

@@ -8,6 +8,7 @@ dotenv.config();
 const secret = process.env.JWT_SECRET;
 
 export default class AuthController {
+  // Регистрация
   static async registration(req, res) {
     try {
       const errors = validationResult(req);
@@ -66,6 +67,7 @@ export default class AuthController {
       return res.status(500).json({ message: "Ошибка регистрации", err });
     }
   }
+  // Вход
   static async login(req, res) {
     try {
       const { email, password } = req.body;

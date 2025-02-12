@@ -3,6 +3,7 @@ import UserModel from "../models/User.mjs";
 import PostModel from "../models/Post.mjs";
 
 export default class UserController {
+  // Получение количества пользователей
   static async getUsersCount(req, res) {
     try {
       const count = await UserModel.countDocuments({ roles: { $ne: "ADMIN" } });
@@ -22,6 +23,7 @@ export default class UserController {
       });
     }
   }
+  // Получение всех пользователей
   static async getUsers(req, res) {
     try {
       const { userName } = req.query;
@@ -52,6 +54,7 @@ export default class UserController {
         .json({ message: "Ошибка при получении пользователей", err });
     }
   }
+  // Получение пользователя по id
   static async getUserByID(req, res) {
     try {
       const { id } = req.params;
@@ -68,6 +71,7 @@ export default class UserController {
         .json({ message: "Ошибка при получении пользователя", err });
     }
   }
+  // Получение подписок пользователя по id
   static async getUserSubscriptions(req, res) {
     try {
       const { id } = req.params;
@@ -91,6 +95,7 @@ export default class UserController {
         .json({ message: "Ошибка при получении подписок пользователя", err });
     }
   }
+  // Редактирование пользователя по id
   static async editUser(req, res) {
     try {
       const { id } = req.params;
@@ -139,6 +144,7 @@ export default class UserController {
         .json({ message: "Ошибка при редактировании пользователя", err });
     }
   }
+  // Подписка
   static async subscribe(req, res) {
     try {
       const { id } = req.params;
@@ -168,6 +174,7 @@ export default class UserController {
       res.status(500).json({ message: "Ошибка при попытке подписки", err });
     }
   }
+  // Отписка
   static async unsubscribe(req, res) {
     try {
       const { id } = req.params;
@@ -179,7 +186,7 @@ export default class UserController {
         return res.status(404).json({ message: "Пользователь не найден" });
       }
 
-      const index = user.subscriptions.indexOf(subscriptionID); // индекс подписки
+      const index = user.subscriptions.indexOf(subscriptionID);
       if (index > -1) {
         user.subscriptions.splice(index, 1);
         await user.save();
@@ -195,6 +202,7 @@ export default class UserController {
       res.status(500).json({ message: "Ошибка при попытке отписки", err });
     }
   }
+  // Удаление пользователя по id
   static async deleteUser(req, res) {
     try {
       const { id } = req.params;
