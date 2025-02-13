@@ -29,7 +29,7 @@ export default class AuthController {
       if (existingUserByUserName) {
         return res
           .status(400)
-          .json({ message: "Пользователь с таким userName уже есть на сайте" });
+          .json({ message: "Пользователь с таким юзернеймом уже есть на сайте" });
       }
 
       const salt = await bcrypt.genSalt(10);
