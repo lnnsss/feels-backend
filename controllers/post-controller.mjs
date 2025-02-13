@@ -27,6 +27,19 @@ export default class PostController {
   // Получение количества постов
   static async getPostsCount(req, res) {
     try {
+      // ID пользователя
+      const { userID } = req.query;
+
+      // кол-во постов пользователя
+      if (userID) {
+        const count = await PostModel.countDocuments({ userID });
+        return res.status(200).json({
+          message: "Количество постов пользователя успешно получено",
+          content: count,
+        });
+      }
+
+      // кол-во постов всех пользователей
       const count = await PostModel.countDocuments();
       return res.status(200).json({
         message: "Количество постов успешно получено",
