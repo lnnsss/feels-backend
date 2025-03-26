@@ -94,30 +94,32 @@ export default class ChatController {
   static async getChats(req, res) {
     try {
       const userId = req.user._id;
-  
+
       // Получаем все чаты пользователя
       const chats = await ChatModel.find({
         users: { $in: [userId] },
       })
-        .populate("users", "_id name lastName")
-        .populate("messages");
-  
+          .populate("users", "_id name lastName avatarURL") // Добавили avatarURL
+          .populate("messages");
+
       const result = [];
       for (const chat of chats) {
         // Находим собеседника
         const partner = chat.users.find((user) => user._id.toString() !== userId.toString());
-  
+
         // Находим последнее сообщение
         const lastMessage = chat.messages[chat.messages.length - 1];
-  
+
         result.push({
+          chatID: chat._id, // Добавили chatID
           id: partner._id,
           name: partner.name,
           lastName: partner.lastName,
+          avatarURL: partner.avatarURL, // Добавили avatarURL
           lastMsg: lastMessage ? lastMessage.text : "",
         });
       }
-  
+
       return res.json({ content: result });
     } catch (err) {
       console.error(err);
@@ -130,29 +132,30 @@ export default class ChatController {
     try {
       const chatId = req.params.chatID;
       const userId = req.user._id;
-  
+
       // Проверяем, существует ли чат
       const chat = await ChatModel.findById(chatId)
-        .populate("users", "_id name lastName")
-        .populate("messages");
-  
+          .populate("users", "_id name lastName avatarURL")
+          .populate("messages");
+
       if (!chat) {
         return res.status(404).json({ message: "Чат не найден" });
       }
-  
+
       // Проверяем, является ли пользователь участником чата
       if (!chat.users.some((user) => user._id.toString() === userId.toString())) {
         return res.status(403).json({ message: "Нет доступа к этому чату" });
       }
-  
+
       // Находим собеседника
       const partner = chat.users.find((user) => user._id.toString() !== userId.toString());
-  
+
       return res.json({
         content: {
           userID: partner._id,
           name: partner.name,
           lastName: partner.lastName,
+          avatarURL: partner.avatarURL, // Добавили avatarURL в ответ
           messages: chat.messages,
         },
       });

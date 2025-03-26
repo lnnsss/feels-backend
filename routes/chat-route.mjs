@@ -1,19 +1,19 @@
 import { Router } from "express";
 import ChatController from "../controllers/chat-controller.mjs";
-import tokenValidation from "../middlewares/token-validation.mjs";
+import tokenMiddleware from "../middlewares/token-middleware.mjs";
 
 const router = Router();
 
 // Создание чата
-router.post("/", tokenValidation, ChatController.createChat);
+router.post("/", tokenMiddleware, ChatController.createChat);
 
 // Создание сообщения
-router.post("/:chatID/message", tokenValidation, ChatController.createMessage);
+router.post("/:chatID/message", tokenMiddleware, ChatController.createMessage);
 
 // Получение всех чатов пользователя
-router.get("/", tokenValidation, ChatController.getChats);
+router.get("/", tokenMiddleware, ChatController.getChats);
 
 // Получение конкретного чата пользователя
-router.get("/:chatID", tokenValidation, ChatController.getChat);
+router.get("/:chatID", tokenMiddleware, ChatController.getChat);
 
 export default router;

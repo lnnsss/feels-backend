@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 const secret = process.env.JWT_SECRET;
 
-const tokenValidation = async (req, res, next) => {
+const tokenMiddleware = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
@@ -18,4 +18,4 @@ const tokenValidation = async (req, res, next) => {
   }
 };
 
-export default tokenValidation;
+export default tokenMiddleware;
