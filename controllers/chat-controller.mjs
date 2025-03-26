@@ -116,11 +116,11 @@ export default class ChatController {
           name: partner.name,
           lastName: partner.lastName,
           avatarURL: partner.avatarURL, // Добавили avatarURL
-          lastMsg: lastMessage ? lastMessage.text : "",
+          lastMessage: lastMessage ? lastMessage.text : "",
         });
       }
 
-      return res.json({ content: result });
+      return res.json({ message: "Чаты успешно получены", content: result });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ message: "Ошибка при получении чатов", err });
@@ -135,7 +135,7 @@ export default class ChatController {
 
       // Проверяем, существует ли чат
       const chat = await ChatModel.findById(chatId)
-          .populate("users", "_id name lastName avatarURL")
+          .populate("users", "_id userName name lastName avatarURL")
           .populate("messages");
 
       if (!chat) {
@@ -150,15 +150,15 @@ export default class ChatController {
       // Находим собеседника
       const partner = chat.users.find((user) => user._id.toString() !== userId.toString());
 
-      return res.json({
-        content: {
-          userID: partner._id,
-          name: partner.name,
-          lastName: partner.lastName,
-          avatarURL: partner.avatarURL, // Добавили avatarURL в ответ
-          messages: chat.messages,
-        },
-      });
+      const result = {
+        userID: partner._id,
+        userName: partner.userName,
+        name: partner.name,
+        lastName: partner.lastName,
+        avatarURL: partner.avatarURL,
+        messages: chat.messages,
+      }
+      return res.json({ message: "Чат успешно получен", content: result });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ message: "Ошибка при получении чата", err });
