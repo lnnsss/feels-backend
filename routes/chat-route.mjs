@@ -4,16 +4,19 @@ import tokenMiddleware from "../middlewares/token-middleware.mjs";
 
 const router = Router();
 
+// Проверяем токен
+router.use(tokenMiddleware)
+
 // Создание чата
-router.post("/", tokenMiddleware, ChatController.createChat);
+router.post("/", ChatController.createChat);
 
 // Создание сообщения
-router.post("/:chatID/message", tokenMiddleware, ChatController.createMessage);
+router.post("/:chatID/message", ChatController.createMessage);
 
 // Получение всех чатов пользователя
-router.get("/", tokenMiddleware, ChatController.getChats);
+router.get("/", ChatController.getChats);
 
 // Получение конкретного чата пользователя
-router.get("/:chatID", tokenMiddleware, ChatController.getChat);
+router.get("/:chatID", ChatController.getChat);
 
 export default router;
