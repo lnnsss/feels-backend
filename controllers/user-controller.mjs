@@ -26,36 +26,28 @@ export default class UserController {
   // Получение всех пользователей
   static async getUsers(req, res) {
     try {
-      const { userName } = req.query;
-      let content;
+      const content = await UserModel.find(
+          { roles: { $ne: "ADMIN" } },
+          { _id: 1, userName: 1, name: 1, lastName: 1, avatarURL: 1 }
+      );
 
-      if (userName) {
-        content = await UserModel.findOne({ userName });
-        if (!content) {
-          return res.status(404).json({ message: "Пользователь не найден" });
-        }
+      if (content.length === 0) {
         return res
-          .status(200)
-          .json({ message: "Пользователь успешно получен", content });
-      } else {
-        content = await UserModel.find({ roles: { $ne: "ADMIN" } });
-        if (content.length === 0) {
-          return res
-            .status(400)
+            .status(200)
             .json({ message: "Пользователи отсутствуют", content });
-        }
-        return res
+      }
+
+      return res
           .status(200)
           .json({ message: "Пользователи успешно получены", content });
-      }
     } catch (err) {
       return res
-        .status(500)
-        .json({ message: "Ошибка при получении пользователей", err });
+          .status(500)
+          .json({ message: "Ошибка при получении пользователей", err });
     }
   }
   // Получение пользователя по id
-  static async getUserByID(req, res) {
+  static async getUser(req, res) {
     try {
       const { id } = req.params;
       const content = await UserModel.findById(id);
@@ -63,12 +55,64 @@ export default class UserController {
         return res.status(400).json({ message: "Пользователь не найден" });
       }
       return res
-        .status(200)
-        .json({ message: "Пользователь успешно получен", content });
+          .status(200)
+          .json({ message: "Пользователь успешно получен", content });
     } catch (err) {
       res
-        .status(500)
-        .json({ message: "Ошибка при получении пользователя", err });
+          .status(500)
+          .json({ message: "Ошибка при получении пользователя", err });
+    }
+  }
+  // Получение информации о пользователе по userName
+  static async getUserInfoByUserName(req, res) {
+    try {
+      const { userName } = req.params;
+
+      // Находим пользователя с нужными полями
+      const user = await UserModel.findOne(
+          { userName },
+          { _id: 1, userName: 1, name: 1, lastName: 1, avatarURL: 1, subscriptions: 1 }
+      );
+
+      if (!user) {
+        return res.status(400).json({ message: "Пользователь не найден", content: null });
+      }
+
+      // Получаем все посты пользователя
+      const posts = await PostModel.find({ userID: user._id });
+
+      return res.status(200).json({
+        message: "Пользователь успешно получен",
+        content: { ...user._doc, posts }
+      });
+    } catch (err) {
+      res.status(500).json({ message: "Ошибка при получении пользователя", content: null, err });
+    }
+  }
+  // Получение информации о пользователе по id
+  static async getUserInfoById(req, res) {
+    try {
+      const { id } = req.params;
+
+      // Находим пользователя с нужными полями
+      const user = await UserModel.findById(
+          id,
+          { _id: 1, userName: 1, name: 1, lastName: 1, avatarURL: 1, subscriptions: 1 }
+      );
+
+      if (!user) {
+        return res.status(400).json({ message: "Пользователь не найден", content: null });
+      }
+
+      // Получаем все посты пользователя
+      const posts = await PostModel.find({ userID: id });
+
+      return res.status(200).json({
+        message: "Пользователь успешно получен",
+        content: { ...user._doc, posts }
+      });
+    } catch (err) {
+      res.status(500).json({ message: "Ошибка при получении пользователя", content: null, err });
     }
   }
   // Получение подписок пользователя по id

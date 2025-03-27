@@ -11,7 +11,13 @@ router.get("/count", UserController.getUsersCount);
 router.get("/", UserController.getUsers);
 
 // Получение пользователя по id
-router.get("/:id", UserController.getUserByID);
+router.get("/:id", UserController.getUser);
+
+// Получение информации о пользователе по id
+router.get("/:id/idInfo", UserController.getUserInfoById);
+
+// Получение информации о пользователе по userName
+router.get("/:userName/userNameInfo", UserController.getUserInfoByUserName);
 
 // Получение подписок пользователя по id
 router.get("/:id/subscriptions", UserController.getUserSubscriptions);
