@@ -28,7 +28,7 @@ export default class ChatController {
         users: { $all: [userId, partnerId] },
       });
       if (existingChat) {
-        return res.status(400).json({ message: "Чат уже существует" });
+        return res.status(201).json({ message: "Чат уже существует", content: existingChat });
       }
   
       // Создаем новый чат
@@ -55,7 +55,6 @@ export default class ChatController {
       const chatId = req.params.chatID; 
       const { text } = req.body; 
       const userId = req.user._id;
-      console.log(`chatId: ${chatId}`);
       
   
       // Проверяем, существует ли чат
